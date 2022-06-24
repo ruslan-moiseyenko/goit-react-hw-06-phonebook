@@ -1,14 +1,11 @@
-export const addContact = value => ({
-  type: 'contacts/ADD_CONTACT',
-  payload: value,
-});
+import { createAction } from '@reduxjs/toolkit';
 
-export const deliteContact = value => ({
-  type: 'contacts/DELITE_CONTACT',
-  payload: value,
-});
+const ADD_CONTACT = 'contacts/ADD_CONTACT';
+const DELITE_CONTACT = 'contacts/DELITE_CONTACT';
+const FILTER_CHANGE = 'filter/FILTER_CHANGE';
 
-export const onFilterChange = event => ({
-  type: 'filter/FILTER_CHANGE',
-  payload: event.target.value,
-});
+export const addContact = createAction(ADD_CONTACT);
+
+export const deliteContact = createAction(DELITE_CONTACT);
+
+export const onFilterChange = createAction(FILTER_CHANGE);
