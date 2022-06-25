@@ -4,10 +4,10 @@ import { createReducer } from '@reduxjs/toolkit';
 import { addContact, deliteContact, onFilterChange } from '../redux/actions';
 
 const contacts = localStorage.getItem('contacts');
+
 const initialState = {
   contacts: contacts ? JSON.parse(contacts) : contactsInitial,
   filter: '',
-  filteredNames: contactsInitial,
 };
 
 const reducer = createReducer(initialState, {
@@ -43,7 +43,7 @@ const reducer = createReducer(initialState, {
   [onFilterChange]: (state, action) => {
     return {
       ...state,
-      filter: action.payload.target.value,
+      filter: action.payload,
     };
   },
 });

@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { LiContacts } from './Contacts.styled';
+import { connect } from 'react-redux';
+import * as actions from '../../redux/actions';
 
 const Contacts = ({ contacts, onDeliteContact }) => {
   return (
@@ -15,7 +17,21 @@ const Contacts = ({ contacts, onDeliteContact }) => {
   );
 };
 
-export default Contacts;
+const mapStateToProps = state => {
+  return {
+    contacts: state.contacts.filter(contact =>
+      contact.name.toLowerCase().includes(state.filter.toLowerCase())
+    ),
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onDeliteContact: id => dispatch(actions.deliteContact(id)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Contacts);
 
 Contacts.propTypes = {
   contacts: PropTypes.arrayOf(
