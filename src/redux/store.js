@@ -2,11 +2,20 @@ import { configureStore } from '@reduxjs/toolkit';
 import contactsInitial from '../components/phonebookAddingForm/contacts.json';
 import { createReducer } from '@reduxjs/toolkit';
 import { addContact, deliteContact, onFilterChange } from '../redux/actions';
-
-const contacts = localStorage.getItem('contacts');
+import storage from 'redux-persist/lib/storage';
+import {
+  persistReducer,
+  persistStore,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist';
 
 const initialState = {
-  contacts: contacts ? JSON.parse(contacts) : contactsInitial,
+  contacts: contactsInitial,
   filter: '',
 };
 
@@ -20,10 +29,6 @@ const reducer = createReducer(initialState, {
       alert(`${action.payload.name} is already in contacts`);
       return;
     } else {
-      localStorage.setItem(
-        'contacts',
-        JSON.stringify([...state.contacts, action.payload])
-      );
       return {
         ...state,
         contacts: [...state.contacts, action.payload],
@@ -32,13 +37,6 @@ const reducer = createReducer(initialState, {
   },
 
   [deliteContact]: (state, action) => {
-    localStorage.setItem(
-      'contacts',
-      JSON.stringify(
-        state.contacts.filter(contact => contact.id !== action.payload)
-      )
-    );
-
     return {
       ...state,
       contacts: state.contacts.filter(contact => contact.id !== action.payload),
@@ -52,8 +50,23 @@ const reducer = createReducer(initialState, {
   },
 });
 
+const persistConfig = {
+  key: 'counter',
+  storage,
+};
+
+const persistedReducer = persistReducer(persistConfig, reducer);
+
 const store = configureStore({
-  reducer,
+  reducer: persistedReducer,
   devTools: process.env.NODE_ENV !== 'production',
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 });
+export const persistor = persistStore(store);
+
 export default store;
