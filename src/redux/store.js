@@ -12,7 +12,11 @@ const initialState = {
 
 const reducer = createReducer(initialState, {
   [addContact]: (state, action) => {
-    if (state.contacts.some(contact => contact.name === action.payload.name)) {
+    if (
+      state.contacts.some(
+        ({ name }) => name.toLowerCase() === action.payload.name.toLowerCase()
+      )
+    ) {
       alert(`${action.payload.name} is already in contacts`);
       return;
     } else {
@@ -52,5 +56,4 @@ const store = configureStore({
   reducer,
   devTools: process.env.NODE_ENV !== 'production',
 });
-
 export default store;

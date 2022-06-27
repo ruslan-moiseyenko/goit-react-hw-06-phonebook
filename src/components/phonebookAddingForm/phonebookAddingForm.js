@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
 import { FormPhoneBook, FormInput } from './FormPhoneBook.styled';
-import { connect } from 'react-redux';
 import * as actions from '../../redux/actions';
+import { useDispatch } from 'react-redux';
 
-function PhonebookAddingForm({ onSubmit }) {
+function PhonebookAddingForm() {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+  const dispatch = useDispatch();
 
   const handleChange = event => {
     const { name, value } = event.currentTarget;
@@ -26,7 +26,7 @@ function PhonebookAddingForm({ onSubmit }) {
   const handleSubmit = event => {
     event.preventDefault();
     const id = nanoid();
-    onSubmit({ id, name, number });
+    dispatch(actions.addContact({ id, name, number }));
     reset();
   };
 
@@ -70,14 +70,4 @@ function PhonebookAddingForm({ onSubmit }) {
   );
 }
 
-PhonebookAddingForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    onSubmit: data => dispatch(actions.addContact(data)),
-  };
-};
-
-export default connect(null, mapDispatchToProps)(PhonebookAddingForm);
+export default PhonebookAddingForm;
