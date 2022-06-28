@@ -53,6 +53,7 @@ const reducer = createReducer(initialState, {
 const persistConfig = {
   key: 'counter',
   storage,
+  whitelist: ['contacts'],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducer);
